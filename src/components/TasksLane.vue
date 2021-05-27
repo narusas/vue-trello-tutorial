@@ -19,12 +19,12 @@
     <div class="text-sm mt-2">
       <draggable
           group="people"
-          :list="todos"
+          :list="lane.taskList"
           item-key="id"
           @change="log"
       >
         <template #item="{element}">
-          <task-item :task="element"
+          <task-item :task="tasks[element]"
                      @task-title-changed="titleChanged(element, $event)"/>
         </template>
 
@@ -37,7 +37,7 @@
   </div>
 </template>
 <script setup>
-import {ref, defineProps, toRefs, computed, watch, nextTick} from "vue";
+import {ref, defineProps, toRefs, computed, watch, nextTick, inject} from "vue";
 import {Plus} from "@icon-park/vue-next";
 import TaskItem from "./TaskItem.vue";
 import draggable from '../../node_modules/vuedraggable/src/vuedraggable';
@@ -52,15 +52,8 @@ const props = defineProps({
   }
 });
 
-const a = {
-  age: 12,
-  name: "John"
-};
+console.log("props.lane", props.lane);
 
-
-const {lane} = toRefs(props);
-
-console.log("Lane", lane)
 
 function titleChanged(task, changedTitle) {
   task.title = changedTitle;
@@ -78,7 +71,9 @@ function addTask() {
   todos.value.push(newTask);
 }
 
-const todos = ref(lane.value.tasks.filter(task => !task.done))
+const tasks = inject("tasks");
+console.log("tasks", tasks);
+
 
 const isEditingTitle = ref(false);
 const editingTitle = ref(null);

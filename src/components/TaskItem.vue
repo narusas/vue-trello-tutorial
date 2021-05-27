@@ -1,6 +1,6 @@
 <template>
   <div
-    class="
+      class="
       bg-white
       p-2
       rounded
@@ -9,35 +9,35 @@
       cursor-pointer
       hover:bg-grey-lighter
     "
-    @dblclick="goingToEdit"
+      @dblclick="goingToEdit"
   >
     <template v-if="isEditing == false">
       <input
-        type="checkbox"
-        class="rounded"
-        :checked="task.done"
-        @click="toggleDone(task)"
+          type="checkbox"
+          class="rounded"
+          :checked="task.done"
+          @click="toggleDone(task)"
       />
       {{ task.title }}
     </template>
     <template v-if="isEditing">
       <input
-        v-model="editing"
-        @keyup.enter="completeEditing"
-        @keyup.esc="cancel"
-        @blur="completeEditing"
-        ref="editingEl"
-        class="w-full h-full"
+          v-model="editing"
+          @keyup.enter="completeEditing"
+          @keyup.esc="cancel"
+          @blur="completeEditing"
+          ref="editingEl"
+          class="w-full h-full"
       />
     </template>
   </div>
 </template>
 
 <script setup>
-import { ref, toRefs, defineProps, defineEmit, nextTick, onMounted } from "vue";
-import { onClickOutside } from "@vueuse/core";
+import {ref, toRefs, defineProps, defineEmit, nextTick, onMounted} from "vue";
+import {onClickOutside} from "@vueuse/core";
 
-import { titleChanged, toggleDone } from "../models/tasks.js";
+import {titleChanged, toggleDone} from "../models/tasks.js";
 
 const props = defineProps({
   task: {
@@ -47,7 +47,7 @@ const props = defineProps({
 
 const emit = defineEmit(["task-title-changed"]);
 
-const isEditing = ref(!!props.task.isNewAppened);
+const isEditing = ref(!!props.task?.isNewAppened);
 
 const editingEl = ref(null);
 
@@ -67,6 +67,7 @@ function completeEditing() {
   // props.task.title = editing.value;
   // // emit("task-title-changed",editing.value);
 }
+
 function cancel() {
   isEditing.value = false;
 }

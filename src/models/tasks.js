@@ -5,11 +5,6 @@ export function titleChanged(task, changedTitle) {
 }
 
 
-async function getTasks() {
-  const payload = await getData();
-  parsePayload(payload);
-}
-
 async function fetchData(){
     const response = await axios.get("/api/tasks");
     console.log("response",response);

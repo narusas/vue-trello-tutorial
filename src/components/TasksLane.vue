@@ -55,9 +55,7 @@ const props = defineProps({
 console.log("props.lane", props.lane);
 
 
-function titleChanged(task, changedTitle) {
-  task.title = changedTitle;
-}
+
 
 let id = 100;
 
@@ -89,7 +87,7 @@ function goingToEditingTitle() {
 
 function completeEditingTitle() {
   if (!!editingTitle.value) {
-    lane.value.title = editingTitle.value;
+    changeLaneTitle(editingTitle.value);
   }
   editingTitle.value = null;
 

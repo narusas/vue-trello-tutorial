@@ -8,17 +8,18 @@
       border-b border-grey
       cursor-pointer
       hover:bg-grey-lighter
+      flex
+      align-middle
     "
-      @dblclick="goingToEdit"
   >
     <template v-if="isEditing == false">
       <input
           type="checkbox"
           class="rounded"
           :checked="task.done"
-          @click="toggleDone(task)"
+          @click="toggleTaskDone(task)"
       />
-      {{ task.title }}
+      <div @dblclick="goingToEdit">{{ task.title }}</div>
     </template>
     <template v-if="isEditing">
       <input
@@ -37,7 +38,9 @@
 import {ref, toRefs, defineProps, defineEmit, nextTick, onMounted} from "vue";
 import {onClickOutside} from "@vueuse/core";
 
-import {titleChanged, toggleDone} from "../models/tasks.js";
+import {useModel} from "../models/tasks.js";
+
+const {changeTaskTitle, toggleTaskDone} = useModel();
 
 const props = defineProps({
   task: {
@@ -63,9 +66,8 @@ onMounted(() => {
 
 function completeEditing() {
   isEditing.value = false;
-  titleChanged(props.task, editing.value);
-  // props.task.title = editing.value;
-  // // emit("task-title-changed",editing.value);
+  changeTaskTitle(props.task, editing.value);
+  emit("task-title-changed", editing.value);
 }
 
 function cancel() {

@@ -2,7 +2,7 @@ import axios from "axios";
 import {ref} from "vue";
 
 
-export async function getData() {
+async function getData() {
   const response = await axios.get("/api/tasks");
 
   console.log("response", response);
@@ -38,14 +38,18 @@ function parseTasks(payload) {
 }
 
 
-export function titleChanged() {
+function changeLaneTitle() {
 
 }
 
-export function toggleDone() {
+function changeTaskTitle() {
+
+}
+
+function toggleTaskDone() {
 
 }
 
 export function useModel() {
-  return {laneList, lanes, tasks, getTasks}
+  return {laneList, lanes, tasks, getTasks, changeLaneTitle, changeTaskTitle, toggleTaskDone}
 }

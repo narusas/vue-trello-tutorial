@@ -4,9 +4,10 @@ export function titleChanged(task, changedTitle) {
     task.title = changedTitle;
 }
 
-export function  toggleDone(task) {
-    console.log("done",task.done);
-    task.done = !task.done;
+
+async function getTasks() {
+  const payload = await getData();
+  parsePayload(payload);
 }
 
 async function fetchData(){

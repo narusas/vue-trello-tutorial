@@ -29,8 +29,11 @@
                     @task-title-changed="titleChanged(element, $event)" />
             </template>
 
-        </draggable>
-      <p class="mt-3 text-grey-dark flex" @click="addTask"><plus/>Add a card...</p>
+      </draggable>
+      <p class="mt-3 text-grey-dark flex" @click="addTask">
+        <plus/>
+        Add a card...
+      </p>
     </div>
   </div>
 </template>
@@ -41,13 +44,13 @@ import TaskItem from "./TaskItem.vue";
 import draggable from '../../node_modules/vuedraggable/src/vuedraggable';
 
 function log(p1) {
-    console.log(p1);
+  console.log(p1);
 }
 
 const props = defineProps({
-    lane: {
-        type: Object
-    }
+  lane: {
+    type: Object
+  }
 });
 
 
@@ -55,19 +58,17 @@ const props = defineProps({
 const {lane} = toRefs(props);
 const tasks = inject("tasks");
 
-console.log("Lane", lane)
-function titleChanged(task, changedTitle) {
-    task.title = changedTitle;
-}
+
 let id = 100;
+
 function addTask() {
-    const newTask = {
-        id: id++,
-        title:'',
-        done:false,
-        isNewAppened: true
-    }
-    todos.value.push(newTask);
+  const newTask = {
+    id: id++,
+    title: '',
+    done: false,
+    isNewAppened: true
+  }
+  todos.value.push(newTask);
 }
 // const todos = ref(lane.value.tasks.filter(task => !task.done ))
 

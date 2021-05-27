@@ -1,17 +1,31 @@
 <template>
   <div class="rounded bg-blue-200 w-64 p-2 mx-2 shadow-2xl">
     <div class="flex justify-between py-1">
-      <h3 class="text-sm font-bold">{{lane.title}}</h3>
+        <h3  v-if="isEditingTitle == false"
+            @dblclick="goingToEditTitle"
+                class="text-sm font-bold">{{lane.title}}</h3>
+        <input type="text" 
+            v-else 
+            v-model="editingTitle"
+
+            ref="editingTitleEl"
+            @keyup.esc="cancelEditTitle"
+            
+            @keyup.enter="completeEditTitle"
+            @blur="completeEditTitle"
+
+        >
+
     </div>
     <div class="text-sm mt-2">
         <draggable 
             group="people"
-            :list="todos"
+            :list="lane.taskList"
             item-key="id"  
             @change="log"
         >
             <template #item="{element}">
-                <task-item :task="element"
+                <task-item :task="tasks[element]"
                     @task-title-changed="titleChanged(element, $event)" />
             </template>
 
@@ -21,7 +35,7 @@
   </div>
 </template>
 <script setup>
-import {ref, defineProps, toRefs, computed, watch} from "vue";
+import {ref, defineProps, toRefs, computed, watch, nextTick, inject} from "vue";
 import {Plus} from "@icon-park/vue-next";
 import TaskItem from "./TaskItem.vue";
 import draggable from '../../node_modules/vuedraggable/src/vuedraggable';
@@ -36,13 +50,10 @@ const props = defineProps({
     }
 });
 
-const a = {
-    age:12,
-    name: "John"
-};
 
 
 const {lane} = toRefs(props);
+const tasks = inject("tasks");
 
 console.log("Lane", lane)
 function titleChanged(task, changedTitle) {
@@ -58,15 +69,33 @@ function addTask() {
     }
     todos.value.push(newTask);
 }
-const todos = ref(lane.value.tasks.filter(task => !task.done ))
+// const todos = ref(lane.value.tasks.filter(task => !task.done ))
 
-// watch(()=>[...todos.value], (newValue, oldValue)=>{
-//     console.log(newValue,oldValue);
-// });
+const isEditingTitle = ref(false);
+const editingTitle = ref(null);
+const editingTitleEl = ref(null);
 
+function goingToEditTitle() {
+    isEditingTitle.value = true;
+    editingTitle.value = lane.value.title;
+    nextTick(()=>{
+        editingTitleEl.value.focus();
+    });
+    
+}
 
-// const todos = computed(()=>{
-//     return lane.value.tasks.filter(task => !task.done );
-// });
+function cancelEditTitle() {
+    isEditingTitle.value = false;
+    editingTitle.value = null;
+}
+
+function completeEditTitle() {
+    if (!!editingTitle.value){
+        lane.value.title = editingTitle.value;
+    }
+    isEditingTitle.value = false;
+    editingTitle.value = null;
+}
+
 
 </script>

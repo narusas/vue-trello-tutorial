@@ -42,13 +42,15 @@ import {useModel} from "../models/tasks.js";
 
 const {changeTaskTitle, toggleTaskDone} = useModel();
 
+import { useModel } from "../models/tasks.js";
+
 const props = defineProps({
   task: {
     type: Object,
   },
 });
 
-const emit = defineEmit(["task-title-changed"]);
+const emit = defineEmit(["editCompleted", "editCanceled"]);
 
 const isEditing = ref(!!props.task?.isNewAppened);
 
@@ -64,15 +66,22 @@ onMounted(() => {
   });
 });
 
+
+
 function completeEditing() {
   isEditing.value = false;
-  changeTaskTitle(props.task, editing.value);
-  emit("task-title-changed", editing.value);
+  emit("editCompleted", props.task.id, editing.value)
+//   updateTaskTitle(props.task.id, editing.value);
+//   titleChanged(props.task, editing.value);
+  // props.task.title = editing.value;
+  // // emit("task-title-changed",editing.value);
 }
 
 function cancel() {
   isEditing.value = false;
+  emit("editCancled");
 }
+
 
 function goingToEdit() {
   isEditing.value = true;

@@ -42,7 +42,6 @@ import {useModel} from "../models/tasks.js";
 
 const {changeTaskTitle, toggleTaskDone} = useModel();
 
-import { useModel } from "../models/tasks.js";
 
 const props = defineProps({
   task: {

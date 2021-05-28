@@ -10,7 +10,6 @@
 
             ref="editingTitleEl"
             @keyup.esc="cancelEditTitle"
-            
             @keyup.enter="completeEditTitle"
             @blur="completeEditTitle"
 
@@ -22,14 +21,24 @@
             group="people"
             :list="lane.taskList"
             item-key="id"  
-            @change="log"
+            @change="updateLaneTasks"
         >
             <template #item="{element}">
-                <task-item :task="tasks[element]"
-                    @task-title-changed="titleChanged(element, $event)" />
+                <task-item 
+                    :task="tasks[element]"
+                    @editCompleted="updateTaskTitle"
+                    />
             </template>
 
         </draggable>
+        <task-item 
+            v-if="isAppendingNewTask"
+            :task="newTask"
+            @editCompleted="appendNewTask"
+            @editCancled="cancelNewTask"
+        />
+
+
       <p class="mt-3 text-grey-dark flex" @click="addTask"><plus/>Add a card...</p>
     </div>
   </div>
@@ -39,9 +48,30 @@ import {ref, defineProps, toRefs, computed, watch, nextTick, inject} from "vue";
 import {Plus} from "@icon-park/vue-next";
 import TaskItem from "./TaskItem.vue";
 import draggable from '../../node_modules/vuedraggable/src/vuedraggable';
+import {useModel} from "../models/tasks.js";
 
-function log(p1) {
-    console.log(p1);
+const {moveTask, repositionTask, updateTaskTitle, postNewTask} = useModel();
+
+
+function appendNewTask(taskId, title) {
+    postNewTask(props.lane.id, taskId, title);
+}
+function updateLaneTasks(event) {
+    if (!!event.added){
+        const taskId = event.added.element;
+        const {newIndex} = event.added;
+        moveTask(taskId, props.lane.id, newIndex);
+    }
+    else if (!!event.moved){
+        console.log(event);
+        const taskId = event.moved.element;
+        const {newIndex, oldIndex} = event.moved;
+        repositionTask(
+            taskId,  
+            newIndex,
+            oldIndex, 
+            );
+    }
 }
 
 const props = defineProps({
@@ -59,15 +89,25 @@ console.log("Lane", lane)
 function titleChanged(task, changedTitle) {
     task.title = changedTitle;
 }
+
+const isAppendingNewTask = ref(false);
+const newTask = ref(null);
+
 let id = 100;
 function addTask() {
-    const newTask = {
+    newTask.value = {
         id: id++,
         title:'',
         done:false,
         isNewAppened: true
     }
-    todos.value.push(newTask);
+    isAppendingNewTask.value = true;
+    
+}
+
+function cancelNewTask(){
+    isAppendingNewTask.value = false;
+    newTask.value = null;
 }
 // const todos = ref(lane.value.tasks.filter(task => !task.done ))
 
@@ -89,9 +129,14 @@ function cancelEditTitle() {
     editingTitle.value = null;
 }
 
+
+
+const {updateLaneTitle} = useModel();
+
 function completeEditTitle() {
     if (!!editingTitle.value){
-        lane.value.title = editingTitle.value;
+        updateLaneTitle(lane.value.id, editingTitle.value);
+        // lane.value.title = editingTitle.value;
     }
     isEditingTitle.value = false;
     editingTitle.value = null;

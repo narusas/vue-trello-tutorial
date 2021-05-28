@@ -37,8 +37,6 @@
             @editCompleted="appendNewTask"
             @editCancled="cancelNewTask"
         />
-
-
       <p class="mt-3 text-grey-dark flex" @click="addTask"><plus/>Add a card...</p>
     </div>
   </div>
@@ -51,6 +49,7 @@ import draggable from '../../node_modules/vuedraggable/src/vuedraggable';
 import {useModel} from "../models/tasks.js";
 
 const {moveTask, repositionTask, updateTaskTitle, postNewTask} = useModel();
+
 
 
 function appendNewTask(taskId, title) {
@@ -72,12 +71,13 @@ function updateLaneTasks(event) {
             oldIndex, 
             );
     }
+
 }
 
 const props = defineProps({
-    lane: {
-        type: Object
-    }
+  lane: {
+    type: Object
+  }
 });
 
 
@@ -85,15 +85,11 @@ const props = defineProps({
 const {lane} = toRefs(props);
 const tasks = inject("tasks");
 
-console.log("Lane", lane)
-function titleChanged(task, changedTitle) {
-    task.title = changedTitle;
-}
-
 const isAppendingNewTask = ref(false);
 const newTask = ref(null);
 
 let id = 100;
+
 function addTask() {
     newTask.value = {
         id: id++,

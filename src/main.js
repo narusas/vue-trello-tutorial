@@ -1,4 +1,4 @@
 import { createApp } from "vue";
 import "./index.css";
-
-createApp(App).mount("#app");
+import TodoApp from "./TodoApp.vue";
+createApp(TodoApp).mount("#app");

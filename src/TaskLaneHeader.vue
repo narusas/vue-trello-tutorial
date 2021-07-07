@@ -2,7 +2,6 @@
   <div class="flex justify-between py-1" @dblclick="goingToEdit">
     <template v-if="isEditing === false">
       <h3 class="text-sm font-bold">{{ laneName }}</h3>
-      <more></more>
     </template>
 
     <template v-if="isEditing">

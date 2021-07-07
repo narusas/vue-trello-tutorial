@@ -5,8 +5,8 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
+      '/tasks': {
+        target: 'http://localhost:4001',
         changeOrigin: true,
       },
     }

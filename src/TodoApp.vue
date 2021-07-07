@@ -5,36 +5,17 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import TaskLane from "./TaskLane.vue";
 import TaskItem from "./TaskItem.vue";
+import axios from "axios";
 
-const lanes = ref([
-    {
-        laneId: "lane001",
-        name: "Backlogs",
-        tasks: [
-            {
-                taskId: "task001",
-                text: "Do a mobile first layout",
-                archived: false
-            },
-            {
-                taskId: "task002",
-                text: "Check the responsive layout",
-                archived: true
-            },
-            {
-                taskId: "task003",
-                text: "Check the meta tags",
-                archived: false
-            }
-        ]
-    },
-    {
-        laneId: "lane002",
-        name: "Done",
-        tasks: []
-    }
-]);
+const lanes = ref([]);
+async function getTasks() {
+  const res = await axios.get("/tasks");
+  console.log("Response:", res);
+  lanes.value = res.data;
+}
+onMounted(getTasks);
+
 </script>
